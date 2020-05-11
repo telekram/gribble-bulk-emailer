@@ -11,12 +11,9 @@ $password = ConvertTo-SecureString $settings."password" -AsPlainText -Force
 $logObj = New-Object -TypeName pscustomobject
 
 $csvFile | ForEach-Object{
-  
-  Write-Host $_.emailaddress  
-  
+   
   $From = $username
   $To = $_.emailaddress
-  $To = 'lee@cheltsec.vic.edu.au'
 
   $Subject = "Gribble Lives"
   $Body = "<h3>Email Body</h3>"
@@ -26,11 +23,13 @@ $csvFile | ForEach-Object{
     Send-MailMessage -From $From -to $To -Subject $Subject -Body $Body -BodyAsHtml -SmtpServer $SMTPServer -Port $SMTPPort -UseSsl -Credential (New-Object System.Management.Automation.PSCredential ($username, $password))
     Write-Host "Sent message to: $To"
     $logObj | Add-Member -MemberType NoteProperty -Name Email -Value $To
+    Write-Host "Email sent to: $_.emailaddress"  
     $logObj | Add-Member -MemberType NoteProperty -Name Status -Value 'Email sent SUCCESSFULLY'
   
   } catch {
     $logObj | Add-Member -MemberType NoteProperty -Name Email -Value $To
     $logObj | Add-Member -MemberType NoteProperty -Name Status -Value 'Email sending FAILED'
+    Write-Host "FAILED: $_.emailaddress"
   }
 }
   Export-Csv -Path './log.csv' -InputObject $logObj -Append -NoTypeInformation
