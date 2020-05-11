@@ -13,4 +13,5 @@ Gribble needs a JSON file containing the following keys:
 * username
 * password
   
-example server could be **smtp.gmail.com** with port **587** username **noreply@yourdomain.com**
+Example server could be **smtp.gmail.com** with port **587** username **noreply@yourdomain.com**.
+> Note: Settings will depend on your smtp server provider or setup.
