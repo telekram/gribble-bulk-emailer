@@ -22,14 +22,14 @@ $csvFile | ForEach-Object{
   try {
     Send-MailMessage -From $From -to $To -Subject $Subject -Body $Body -BodyAsHtml -SmtpServer $SMTPServer -Port $SMTPPort -UseSsl -Credential (New-Object System.Management.Automation.PSCredential ($username, $password))
     Write-Host "Sent message to: $To"
-    $logObj | Add-Member -MemberType NoteProperty -Name Email -Value $To
+    $logObj | Add-Member -Force -MemberType NoteProperty -Name Email -Value $To
     Write-Host "Email sent to: $_.emailaddress"  
-    $logObj | Add-Member -MemberType NoteProperty -Name Status -Value 'Email sent SUCCESSFULLY'
-  
+    $logObj | Add-Member -Force -MemberType NoteProperty -Name Status -Value 'Email sent SUCCESSFULLY'
+    Export-Csv -Path './log.csv' -InputObject $logObj -Append -NoTypeInformation
   } catch {
-    $logObj | Add-Member -MemberType NoteProperty -Name Email -Value $To
-    $logObj | Add-Member -MemberType NoteProperty -Name Status -Value 'Email sending FAILED'
+    $logObj | Add-Member -Force -MemberType NoteProperty -Name Email -Value $To
+    $logObj | Add-Member -Force -MemberType NoteProperty -Name Status -Value 'Email sending FAILED'
     Write-Host "FAILED: $_.emailaddress"
+    Export-Csv -Path './log.csv' -InputObject $logObj -Append -NoTypeInformation
   }
 }
-  Export-Csv -Path './log.csv' -InputObject $logObj -Append -NoTypeInformation
