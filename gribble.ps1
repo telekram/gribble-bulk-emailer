@@ -24,11 +24,12 @@ $csvFile | ForEach-Object{
 
   try {
 
-    Send-MailMessage -From $From -to $To -Subject $Subject -Body $Body -BodyAsHtml -SmtpServer $SMTPServer -Port $SMTPPort -UseSsl -Credential (New-Object System.Management.Automation.PSCredential ($username, $password))
+    $cmdOutput = Send-MailMessage -From $From -to $To -Subject $Subject -Body $Body -BodyAsHtml -SmtpServer $SMTPServer -Port $SMTPPort -UseSsl -Credential (New-Object System.Management.Automation.PSCredential ($username, $password))
     
     $log = [PSCustomObject]@{
       Status = 'Success'
       Recipient = $To
+      Messsage = $cmdOutput
     }
     
     Write-Progress -Activity $To -Status "Success:" -PercentComplete ($progressCounter / $totalCount * 100)
@@ -37,9 +38,12 @@ $csvFile | ForEach-Object{
 
   } catch {
 
+    $err = $_.Exception.Message
+
     $log = [PSCustomObject]@{
       Status = 'Failure'
       Recipient = $To
+      Messsage = $err
     }
 
     Write-Progress -Activity $To -Status "Failure:" -PercentComplete ($progressCounter / $totalCount * 100)
